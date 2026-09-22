@@ -1,0 +1,15 @@
+# Python runtime
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Runtime dynamic saves
+history.json
+money.json
+
+# Environments
+env/
+venv/
+.venv/
+.idea/
+.vscode/
