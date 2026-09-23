@@ -6,13 +6,13 @@
   <title>Blackjack — But Better | Web Terminal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090a0f;
-      --card-bg: rgba(16, 19, 28, 0.95);
-      --border: #222738;
-      --text: #c8d3f5;
+      --bg: #0b0c10;
+      --card-bg: #12141d;
+      --border: #1f2438;
+      --text: #c5cdd9;
       --green: #4fd6be;
       --yellow: #ffc777;
       --red: #ff757f;
@@ -30,35 +30,35 @@
     body {
       background-color: var(--bg);
       background-image: 
-        radial-gradient(ellipse at 50% -20%, rgba(130, 170, 255, 0.12), transparent 70%),
-        radial-gradient(ellipse at 80% 80%, rgba(79, 214, 190, 0.06), transparent 60%);
+        radial-gradient(ellipse at 50% 0%, rgba(130, 170, 255, 0.08), transparent 60%),
+        radial-gradient(ellipse at 100% 100%, rgba(79, 214, 190, 0.05), transparent 50%);
       color: var(--text);
-      font-family: 'Fira Code', monospace;
+      font-family: 'Fira Code', Consolas, 'Courier New', monospace;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
+      padding: 0.75rem;
     }
 
-    .container {
+    .terminal-window {
       width: 100%;
-      max-width: 950px;
+      max-width: 960px;
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(130, 170, 255, 0.05);
+      border-radius: 10px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 20px rgba(130, 170, 255, 0.04);
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    /* Terminal Titlebar */
+    /* Titlebar */
     .titlebar {
-      background: #111420;
+      background: #171a26;
       border-bottom: 1px solid var(--border);
-      padding: 0.75rem 1rem;
+      padding: 0.6rem 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -67,12 +67,12 @@
 
     .window-controls {
       display: flex;
-      gap: 8px;
+      gap: 7px;
     }
 
     .dot {
-      width: 12px;
-      height: 12px;
+      width: 11px;
+      height: 11px;
       border-radius: 50%;
       display: inline-block;
     }
@@ -81,10 +81,10 @@
     .dot-green { background: #27c93f; }
 
     .title {
-      font-size: 0.85rem;
-      color: #7982a9;
-      letter-spacing: 0.5px;
+      font-size: 0.8rem;
+      color: #8b95b5;
       font-weight: 600;
+      letter-spacing: 0.3px;
     }
 
     .hud-stats {
@@ -93,7 +93,7 @@
       font-size: 0.8rem;
     }
     .hud-item {
-      color: #828bb8;
+      color: #8b95b5;
     }
     .hud-val {
       font-weight: 700;
@@ -103,60 +103,75 @@
       color: var(--yellow);
     }
 
-    /* Terminal Body */
+    /* Terminal Screen */
     .terminal-body {
-      padding: 1.25rem;
+      padding: 1.25rem 1.5rem;
       min-height: 480px;
-      max-height: 600px;
+      max-height: 620px;
       overflow-y: auto;
-      font-size: 0.92rem;
-      line-height: 1.5;
+      overflow-x: hidden;
+      font-size: 0.95rem;
+      line-height: 1.55;
       scroll-behavior: smooth;
     }
 
     .terminal-body::-webkit-scrollbar {
-      width: 8px;
+      width: 7px;
     }
     .terminal-body::-webkit-scrollbar-thumb {
-      background: var(--border);
+      background: #252b42;
       border-radius: 4px;
     }
 
-    pre.banner {
-      color: var(--cyan);
-      font-weight: bold;
-      font-size: 0.75rem;
-      line-height: 1.15;
-      margin-bottom: 1rem;
+    /* ASCII Banner - Perfectly Sized & Protected Against Wrapping */
+    .ascii-wrapper {
+      width: 100%;
       overflow-x: auto;
-      text-shadow: 0 0 10px rgba(130, 170, 255, 0.3);
+      margin-bottom: 1.25rem;
+      scrollbar-width: none;
+    }
+    .ascii-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    pre.ascii-banner {
+      font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace !important;
+      font-size: clamp(6px, 1.2vw, 10.5px);
+      line-height: 1.0 !important;
+      letter-spacing: 0px !important;
+      white-space: pre !important;
+      word-break: normal !important;
+      overflow-wrap: normal !important;
+      color: var(--cyan);
+      text-shadow: 0 0 10px rgba(130, 170, 255, 0.4);
+      display: inline-block;
+      user-select: none;
     }
 
     .log-line {
-      margin-bottom: 0.25rem;
-      word-break: break-word;
+      margin-bottom: 0.35rem;
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .log-info { color: var(--text); }
     .log-prompt { color: var(--accent); font-weight: 600; }
-    .log-user { color: var(--cyan); font-weight: bold; }
-    .log-win { color: var(--green); font-weight: bold; text-shadow: 0 0 8px rgba(79, 214, 190, 0.4); }
-    .log-loss { color: var(--red); font-weight: bold; }
-    .log-tie { color: var(--yellow); font-weight: bold; }
-    .log-easter { color: var(--purple); font-weight: bold; text-shadow: 0 0 12px rgba(192, 153, 255, 0.6); }
+    .log-user { color: #fff; font-weight: 600; }
+    .log-win { color: var(--green); font-weight: 700; text-shadow: 0 0 8px rgba(79, 214, 190, 0.3); }
+    .log-loss { color: var(--red); font-weight: 700; }
+    .log-tie { color: var(--yellow); font-weight: 700; }
+    .log-easter { color: var(--purple); font-weight: 700; text-shadow: 0 0 12px rgba(192, 153, 255, 0.6); }
 
-    /* Input Line */
+    /* Input Prompt */
     .input-row {
       display: flex;
       align-items: center;
-      margin-top: 0.5rem;
-      position: relative;
+      margin-top: 0.75rem;
     }
 
     .prompt-prefix {
       color: var(--green);
-      font-weight: bold;
+      font-weight: 700;
       margin-right: 0.5rem;
       user-select: none;
     }
@@ -168,15 +183,15 @@
       outline: none;
       font-family: inherit;
       font-size: inherit;
-      color: #fff;
+      color: #ffffff;
       caret-color: var(--green);
     }
 
-    /* Mobile / Quick Action Controls */
+    /* Action bar */
     .quick-bar {
-      background: #0d101b;
+      background: #151824;
       border-top: 1px solid var(--border);
-      padding: 0.75rem 1rem;
+      padding: 0.6rem 1rem;
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
@@ -187,98 +202,91 @@
     .btn-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     button.quick-btn {
-      background: #191e30;
-      border: 1px solid #2d344d;
+      background: #1e2333;
+      border: 1px solid #2f3650;
       color: var(--text);
       font-family: inherit;
       font-size: 0.8rem;
-      padding: 0.4rem 0.75rem;
-      border-radius: 6px;
+      padding: 0.35rem 0.7rem;
+      border-radius: 5px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.12s ease;
     }
 
     button.quick-btn:hover {
-      background: #252c47;
+      background: #2b334a;
       border-color: var(--cyan);
       color: #fff;
-      transform: translateY(-1px);
     }
 
     button.quick-btn.primary {
-      background: rgba(79, 214, 190, 0.15);
+      background: rgba(79, 214, 190, 0.12);
       border-color: var(--green);
       color: var(--green);
     }
     button.quick-btn.primary:hover {
       background: var(--green);
-      color: #090a0f;
+      color: #0b0c10;
     }
 
     button.quick-btn.danger {
-      background: rgba(255, 117, 127, 0.15);
+      background: rgba(255, 117, 127, 0.12);
       border-color: var(--red);
       color: var(--red);
     }
     button.quick-btn.danger:hover {
       background: var(--red);
-      color: #090a0f;
+      color: #0b0c10;
     }
 
-    /* Footer */
     footer {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       font-size: 0.8rem;
-      color: #565f89;
+      color: #636e88;
       display: flex;
-      gap: 1.5rem;
+      gap: 1rem;
       align-items: center;
     }
 
     footer a {
-      color: #7aa2f7;
+      color: #82aaff;
       text-decoration: none;
-      transition: color 0.15s;
     }
-
     footer a:hover {
-      color: #bb9af7;
       text-decoration: underline;
     }
 
-    @media (max-width: 600px) {
-      pre.banner { font-size: 0.55rem; }
+    @media (max-width: 650px) {
       .hud-stats { display: none; }
-      .terminal-body { min-height: 380px; }
+      .terminal-body { min-height: 360px; padding: 1rem; }
+      pre.ascii-banner { font-size: clamp(5px, 2.3vw, 8px); }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <!-- Titlebar -->
+  <div class="terminal-window">
     <div class="titlebar">
       <div class="window-controls">
         <span class="dot dot-red"></span>
         <span class="dot dot-yellow"></span>
         <span class="dot dot-green"></span>
       </div>
-      <div class="title">blackjack@hackclub: ~ (Python 3.11)</div>
+      <div class="title">blackjack@terminal: ~ (python3 main.py)</div>
       <div class="hud-stats">
         <div class="hud-item">BANK: <span class="hud-val" id="hud-money">$1000</span></div>
         <div class="hud-item">STREAK: <span class="hud-val streak" id="hud-streak">0 W</span></div>
-        <div class="hud-item">BEST: <span class="hud-val streak" id="hud-best">0</span></div>
+        <div class="hud-item">BEST: <span class="hud-val streak" id="hud-best">0 W</span></div>
       </div>
     </div>
 
-    <!-- Output Box -->
     <div class="terminal-body" id="terminal-body" onclick="focusInput()">
-      <pre class="banner" id="banner-art">
-▀█████████▄   ▄█          ▄████████  ▄████████    ▄█   ▄█▄           ▄█    ▄████████  ▄████████    ▄█   ▄█▄ 
+      <div class="ascii-wrapper">
+        <pre class="ascii-banner" id="banner-art">▀█████████▄   ▄█          ▄████████  ▄████████    ▄█   ▄█▄           ▄█    ▄████████  ▄████████    ▄█   ▄█▄ 
   ███    ███ ███         ███    ███ ███    ███   ███ ▄███▀          ███   ███    ███ ███    ███   ███ ▄███▀ 
   ███    ███ ███         ███    ███ ███    █▀    ███▐██▀            ███   ███    ███ ███    █▀    ███▐██▀   
  ▄███▄▄▄██▀  ███         ███    ███ ███         ▄█████▀             ███   ███    ███ ███         ▄█████▀    
@@ -286,17 +294,17 @@
   ███    ██▄ ███         ███    ███ ███    █▄    ███▐██▄            ███   ███    ███ ███    █▄    ███▐██▄   
   ███    ███ ███▌    ▄   ███    ███ ███    ███   ███ ▀███▄          ███   ███    ███ ███    ███   ███ ▀███▄ 
 ▄█████████▀  █████▄▄██   ███    █▀  ████████▀    ███   ▀█▀      █▄ ▄███   ███    █▀  ████████▀    ███   ▀█▀ 
-             ▀                                   ▀              ▀▀▀▀▀▀                            ▀         
-      </pre>
+             ▀                                   ▀              ▀▀▀▀▀▀                            ▀         </pre>
+      </div>
+
       <div id="output-log"></div>
-      
+
       <div class="input-row" id="input-row">
         <span class="prompt-prefix">❯</span>
         <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" autofocus />
       </div>
     </div>
 
-    <!-- Quick controls for mobile / fast play -->
     <div class="quick-bar">
       <div class="btn-group">
         <button class="quick-btn primary" onclick="sendQuickInput('y')">Yes (Y)</button>
@@ -316,14 +324,11 @@
   <footer>
     <span>♠ Built for <strong>Hack Club</strong></span>
     <span>•</span>
-    <a href="https://github.com/DarkMatte09/Black-Jack-but-better-" target="_blank" rel="noopener">GitHub Repository</a>
-    <span>•</span>
-    <span>Terminal Web Edition</span>
+    <a href="https://github.com/DarkMatte09/Black-Jack-but-better-" target="_blank" rel="noopener">GitHub Repo</a>
   </footer>
 
   <script>
-    // --- State Persistence ---
-    const BANNER = document.getElementById('banner-art').innerText;
+    // --- State & Storage ---
     let money = parseInt(localStorage.getItem('bj_money')) || 1000;
     let historyData = JSON.parse(localStorage.getItem('bj_history')) || {
       games: [],
@@ -348,7 +353,7 @@
       document.getElementById('hud-best').innerText = `${historyData.best_win_streak} W`;
     }
 
-    // --- Audio Synthesizer ---
+    // --- Audio ---
     const audioCtx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
     function playBeep(freq = 440, type = 'sine', duration = 0.08) {
       if (!audioCtx) return;
@@ -379,7 +384,7 @@
       setTimeout(() => playBeep(260, 'sawtooth', 0.25), 150);
     }
 
-    // --- Terminal Output Engine ---
+    // --- Terminal Engine ---
     const outputLog = document.getElementById('output-log');
     const termBody = document.getElementById('terminal-body');
     const inputEl = document.getElementById('terminal-input');
@@ -394,8 +399,7 @@
 
     function clearScreen() {
       outputLog.innerHTML = '';
-      print(BANNER, 'log-info');
-      print('');
+      termBody.scrollTop = 0;
     }
 
     function sleep(ms) {
@@ -449,10 +453,9 @@
       money = 1000;
       historyData = { games: [], win_streak: 0, loss_streak: 0, best_win_streak: 0, best_loss_streak: 0 };
       saveState();
-      print('--- Bankroll & streaks reset to $1,000 ---', 'log-easter');
+      print('--- Bankroll reset to $1,000 & streaks cleared ---', 'log-easter');
     }
 
-    // --- Record Result ---
     function recordResult(result, bet, utente, banco) {
       historyData.games.push({ result, bet, utente, banco });
       if (result === 'win') {
@@ -485,7 +488,7 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // --- Main Game Flow ---
+    // --- Main Game Loop ---
     async function startGame() {
       updateHUD();
       clearScreen();
@@ -503,9 +506,9 @@
           print("[Game Terminated - Refresh or Click Reset to restart]", "log-loss");
           return;
         } else {
-          print("What a lucky man!", "log-win");
+          print("What a lucky man", "log-win");
           playWinSound();
-          await sleep(1200);
+          await sleep(1500);
         }
       }
 
@@ -528,9 +531,8 @@
         print("Nice decision sir", "log-info");
         return;
       }
-      await sleep(1000);
+      await sleep(1200);
 
-      // Core Game Loop
       while (money > 0) {
         let esito = null;
         clearScreen();
@@ -540,7 +542,7 @@
           const betRaw = await promptInput(`How much do you want to bet? currently having: ${money}$ `);
           bet = parseInt(betRaw);
           if (isNaN(bet) || bet <= 0) {
-            print("Bet must be a number greater than 0.", "log-loss");
+            print("Bet must be greater than 0.", "log-loss");
             continue;
           }
           if (bet > money) {
@@ -579,7 +581,7 @@
               print("I'll throw a coin", "log-prompt");
               await sleep(800);
               if (randInt(1, 2) === 1) {
-                print("It came up heads! Tripled your money!", "log-win");
+                print("It came up heads! You tripled the money!", "log-win");
                 money *= 3;
                 playWinSound();
               } else {
@@ -622,7 +624,7 @@
               print("I'll throw a coin", "log-prompt");
               await sleep(800);
               if (randInt(1, 2) === 1) {
-                print("It came up heads! Tripled your money!", "log-win");
+                print("It came up heads! You tripled the money!", "log-win");
                 money *= 3;
                 playWinSound();
               } else {
@@ -693,7 +695,7 @@
               money += (bet * 2);
             }
           } else if (utente > banco) {
-            print("You win sir! Your number is higher than the bank's", "log-win");
+            print("You win sir! your number is higher than the bank's", "log-win");
             playWinSound();
             esito = "win";
             await sleep(1800);
