@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blackjack — But Better | Web Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card-bg: rgba(16, 19, 28, 0.95);
+      --border: #222738;
+      --text: #c8d3f5;
+      --green: #4fd6be;
+      --yellow: #ffc777;
+      --red: #ff757f;
+      --cyan: #82aaff;
+      --purple: #c099ff;
+      --accent: #e0af68;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(ellipse at 50% -20%, rgba(130, 170, 255, 0.12), transparent 70%),
+        radial-gradient(ellipse at 80% 80%, rgba(79, 214, 190, 0.06), transparent 60%);
+      color: var(--text);
+      font-family: 'Fira Code', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 950px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(130, 170, 255, 0.05);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Terminal Titlebar */
+    .titlebar {
+      background: #111420;
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+
+    .title {
+      font-size: 0.85rem;
+      color: #7982a9;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .hud-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+    }
+    .hud-item {
+      color: #828bb8;
+    }
+    .hud-val {
+      font-weight: 700;
+      color: var(--green);
+    }
+    .hud-val.streak {
+      color: var(--yellow);
+    }
+
+    /* Terminal Body */
+    .terminal-body {
+      padding: 1.25rem;
+      min-height: 480px;
+      max-height: 600px;
+      overflow-y: auto;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    .terminal-body::-webkit-scrollbar {
+      width: 8px;
+    }
+    .terminal-body::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    pre.banner {
+      color: var(--cyan);
+      font-weight: bold;
+      font-size: 0.75rem;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+      text-shadow: 0 0 10px rgba(130, 170, 255, 0.3);
+    }
+
+    .log-line {
+      margin-bottom: 0.25rem;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .log-info { color: var(--text); }
+    .log-prompt { color: var(--accent); font-weight: 600; }
+    .log-user { color: var(--cyan); font-weight: bold; }
+    .log-win { color: var(--green); font-weight: bold; text-shadow: 0 0 8px rgba(79, 214, 190, 0.4); }
+    .log-loss { color: var(--red); font-weight: bold; }
+    .log-tie { color: var(--yellow); font-weight: bold; }
+    .log-easter { color: var(--purple); font-weight: bold; text-shadow: 0 0 12px rgba(192, 153, 255, 0.6); }
+
+    /* Input Line */
+    .input-row {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+      position: relative;
+    }
+
+    .prompt-prefix {
+      color: var(--green);
+      font-weight: bold;
+      margin-right: 0.5rem;
+      user-select: none;
+    }
+
+    .terminal-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: inherit;
+      color: #fff;
+      caret-color: var(--green);
+    }
+
+    /* Mobile / Quick Action Controls */
+    .quick-bar {
+      background: #0d101b;
+      border-top: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    button.quick-btn {
+      background: #191e30;
+      border: 1px solid #2d344d;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    button.quick-btn:hover {
+      background: #252c47;
+      border-color: var(--cyan);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    button.quick-btn.primary {
+      background: rgba(79, 214, 190, 0.15);
+      border-color: var(--green);
+      color: var(--green);
+    }
+    button.quick-btn.primary:hover {
+      background: var(--green);
+      color: #090a0f;
+    }
+
+    button.quick-btn.danger {
+      background: rgba(255, 117, 127, 0.15);
+      border-color: var(--red);
+      color: var(--red);
+    }
+    button.quick-btn.danger:hover {
+      background: var(--red);
+      color: #090a0f;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: #565f89;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    footer a {
+      color: #7aa2f7;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    footer a:hover {
+      color: #bb9af7;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      pre.banner { font-size: 0.55rem; }
+      .hud-stats { display: none; }
+      .terminal-body { min-height: 380px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Titlebar -->
+    <div class="titlebar">
+      <div class="window-controls">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+      </div>
+      <div class="title">blackjack@hackclub: ~ (Python 3.11)</div>
+      <div class="hud-stats">
+        <div class="hud-item">BANK: <span class="hud-val" id="hud-money">$1000</span></div>
+        <div class="hud-item">STREAK: <span class="hud-val streak" id="hud-streak">0 W</span></div>
+        <div class="hud-item">BEST: <span class="hud-val streak" id="hud-best">0</span></div>
+      </div>
+    </div>
+
+    <!-- Output Box -->
+    <div class="terminal-body" id="terminal-body" onclick="focusInput()">
+      <pre class="banner" id="banner-art">
+▀█████████▄   ▄█          ▄████████  ▄████████    ▄█   ▄█▄           ▄█    ▄████████  ▄████████    ▄█   ▄█▄ 
+  ███    ███ ███         ███    ███ ███    ███   ███ ▄███▀          ███   ███    ███ ███    ███   ███ ▄███▀ 
+  ███    ███ ███         ███    ███ ███    █▀    ███▐██▀            ███   ███    ███ ███    █▀    ███▐██▀   
+ ▄███▄▄▄██▀  ███         ███    ███ ███         ▄█████▀             ███   ███    ███ ███         ▄█████▀    
+▀▀███▀▀▀██▄  ███       ▀███████████ ███        ▀▀█████▄             ███ ▀███████████ ███        ▀▀█████▄    
+  ███    ██▄ ███         ███    ███ ███    █▄    ███▐██▄            ███   ███    ███ ███    █▄    ███▐██▄   
+  ███    ███ ███▌    ▄   ███    ███ ███    ███   ███ ▀███▄          ███   ███    ███ ███    ███   ███ ▀███▄ 
+▄█████████▀  █████▄▄██   ███    █▀  ████████▀    ███   ▀█▀      █▄ ▄███   ███    █▀  ████████▀    ███   ▀█▀ 
+             ▀                                   ▀              ▀▀▀▀▀▀                            ▀         
+      </pre>
+      <div id="output-log"></div>
+      
+      <div class="input-row" id="input-row">
+        <span class="prompt-prefix">❯</span>
+        <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" autofocus />
+      </div>
+    </div>
+
+    <!-- Quick controls for mobile / fast play -->
+    <div class="quick-bar">
+      <div class="btn-group">
+        <button class="quick-btn primary" onclick="sendQuickInput('y')">Yes (Y)</button>
+        <button class="quick-btn danger" onclick="sendQuickInput('n')">No (N)</button>
+        <button class="quick-btn" onclick="sendQuickInput('h')">Hit (H)</button>
+        <button class="quick-btn" onclick="sendQuickInput('s')">Stand (S)</button>
+      </div>
+      <div class="btn-group">
+        <button class="quick-btn" onclick="sendQuickBet(50)">$50</button>
+        <button class="quick-btn" onclick="sendQuickBet(100)">$100</button>
+        <button class="quick-btn" onclick="sendQuickBet('all')">All In</button>
+        <button class="quick-btn" onclick="resetSave()">Reset Bank</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>♠ Built for <strong>Hack Club</strong></span>
+    <span>•</span>
+    <a href="https://github.com/DarkMatte09/Black-Jack-but-better-" target="_blank" rel="noopener">GitHub Repository</a>
+    <span>•</span>
+    <span>Terminal Web Edition</span>
+  </footer>
+
+  <script>
+    // --- State Persistence ---
+    const BANNER = document.getElementById('banner-art').innerText;
+    let money = parseInt(localStorage.getItem('bj_money')) || 1000;
+    let historyData = JSON.parse(localStorage.getItem('bj_history')) || {
+      games: [],
+      win_streak: 0,
+      loss_streak: 0,
+      best_win_streak: 0,
+      best_loss_streak: 0
+    };
+
+    function saveState() {
+      localStorage.setItem('bj_money', money);
+      localStorage.setItem('bj_history', JSON.stringify(historyData));
+      updateHUD();
+    }
+
+    function updateHUD() {
+      document.getElementById('hud-money').innerText = '$' + money;
+      const streakText = historyData.win_streak > 0 
+        ? `${historyData.win_streak} W` 
+        : (historyData.loss_streak > 0 ? `${historyData.loss_streak} L` : '0');
+      document.getElementById('hud-streak').innerText = streakText;
+      document.getElementById('hud-best').innerText = `${historyData.best_win_streak} W`;
+    }
+
+    // --- Audio Synthesizer ---
+    const audioCtx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
+    function playBeep(freq = 440, type = 'sine', duration = 0.08) {
+      if (!audioCtx) return;
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playWinSound() {
+      setTimeout(() => playBeep(523.25, 'triangle', 0.1), 0);
+      setTimeout(() => playBeep(659.25, 'triangle', 0.1), 100);
+      setTimeout(() => playBeep(783.99, 'triangle', 0.15), 200);
+      setTimeout(() => playBeep(1046.50, 'triangle', 0.3), 300);
+    }
+
+    function playLossSound() {
+      setTimeout(() => playBeep(330, 'sawtooth', 0.15), 0);
+      setTimeout(() => playBeep(260, 'sawtooth', 0.25), 150);
+    }
+
+    // --- Terminal Output Engine ---
+    const outputLog = document.getElementById('output-log');
+    const termBody = document.getElementById('terminal-body');
+    const inputEl = document.getElementById('terminal-input');
+
+    function print(text = '', className = 'log-info') {
+      const line = document.createElement('div');
+      line.className = `log-line ${className}`;
+      line.textContent = text;
+      outputLog.appendChild(line);
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    function clearScreen() {
+      outputLog.innerHTML = '';
+      print(BANNER, 'log-info');
+      print('');
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    let inputResolver = null;
+    function promptInput(promptText) {
+      return new Promise(resolve => {
+        print(promptText, 'log-prompt');
+        inputEl.value = '';
+        inputEl.focus();
+        inputResolver = resolve;
+      });
+    }
+
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = inputEl.value.trim();
+        print(`> ${val}`, 'log-user');
+        playBeep(600, 'sine', 0.04);
+        inputEl.value = '';
+        if (inputResolver) {
+          const res = inputResolver;
+          inputResolver = null;
+          res(val);
+        }
+      }
+    });
+
+    function focusInput() {
+      inputEl.focus();
+    }
+
+    function sendQuickInput(val) {
+      inputEl.value = val;
+      const event = new KeyboardEvent('keydown', { key: 'Enter' });
+      inputEl.dispatchEvent(event);
+    }
+
+    function sendQuickBet(amount) {
+      let b = amount === 'all' ? money : amount;
+      inputEl.value = b.toString();
+      const event = new KeyboardEvent('keydown', { key: 'Enter' });
+      inputEl.dispatchEvent(event);
+    }
+
+    function resetSave() {
+      localStorage.removeItem('bj_money');
+      localStorage.removeItem('bj_history');
+      money = 1000;
+      historyData = { games: [], win_streak: 0, loss_streak: 0, best_win_streak: 0, best_loss_streak: 0 };
+      saveState();
+      print('--- Bankroll & streaks reset to $1,000 ---', 'log-easter');
+    }
+
+    // --- Record Result ---
+    function recordResult(result, bet, utente, banco) {
+      historyData.games.push({ result, bet, utente, banco });
+      if (result === 'win') {
+        historyData.win_streak += 1;
+        historyData.loss_streak = 0;
+        historyData.best_win_streak = Math.max(historyData.best_win_streak, historyData.win_streak);
+      } else if (result === 'loss') {
+        historyData.loss_streak += 1;
+        historyData.win_streak = 0;
+        historyData.best_loss_streak = Math.max(historyData.best_loss_streak, historyData.loss_streak);
+      } else {
+        historyData.win_streak = 0;
+        historyData.loss_streak = 0;
+      }
+      saveState();
+    }
+
+    function easterEgg() {
+      if (Math.random() < 0.01) {
+        print("Sir, the song of Freddy fazbear saved you", "log-easter");
+        print("You unlocked this easter egg final, enjoy your money ;)", "log-easter");
+        return true;
+      } else {
+        print("You lose sir, your number is lower than the bank's", "log-loss");
+        return false;
+      }
+    }
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // --- Main Game Flow ---
+    async function startGame() {
+      updateHUD();
+      clearScreen();
+
+      const luckStart = (await promptInput("Are you feeling lucky (y/n): ")).toLowerCase();
+      if (luckStart === 'y') {
+        const coin = randInt(1, 2);
+        print("I'll throw a coin you have 50%", "log-info");
+        await sleep(800);
+        print("suspense...", "log-prompt");
+        await sleep(1000);
+        if (coin === 2) {
+          print("Not your day...", "log-loss");
+          playLossSound();
+          print("[Game Terminated - Refresh or Click Reset to restart]", "log-loss");
+          return;
+        } else {
+          print("What a lucky man!", "log-win");
+          playWinSound();
+          await sleep(1200);
+        }
+      }
+
+      clearScreen();
+      const decision = (await promptInput("want to play? (y/n): ")).toLowerCase();
+      if (decision === 'y') {
+        print("Sure? You can't comeback after this decision", "log-prompt");
+      } else if (decision === 'n') {
+        print("Nice decision sir", "log-info");
+        return;
+      } else {
+        print("You have to choose between y or n sir", "log-loss");
+        return;
+      }
+
+      const sure = (await promptInput("Are you sure? (y/n): ")).toLowerCase();
+      if (sure === 'y') {
+        print("Good luck sir, you will need it", "log-win");
+      } else {
+        print("Nice decision sir", "log-info");
+        return;
+      }
+      await sleep(1000);
+
+      // Core Game Loop
+      while (money > 0) {
+        let esito = null;
+        clearScreen();
+
+        let bet = 0;
+        while (true) {
+          const betRaw = await promptInput(`How much do you want to bet? currently having: ${money}$ `);
+          bet = parseInt(betRaw);
+          if (isNaN(bet) || bet <= 0) {
+            print("Bet must be a number greater than 0.", "log-loss");
+            continue;
+          }
+          if (bet > money) {
+            print("You don't have enough money for that bet!", "log-loss");
+            continue;
+          }
+          print(`Ok sir, you bet: ${bet}$`, "log-info");
+          const confirmBet = (await promptInput("Confirm? (y/n): ")).toLowerCase();
+          if (confirmBet === 'y') break;
+        }
+
+        money -= bet;
+        saveState();
+
+        clearScreen();
+        let utente = randInt(1, 21);
+        let banco = randInt(1, 21);
+        while (banco < 17) {
+          banco += randInt(1, 11);
+        }
+
+        print(`Your number is: ${utente}`, "log-win");
+        let hitStand = (await promptInput("Do you want to hit or stand? (h/s): ")).toLowerCase();
+        let busted = false;
+
+        if (hitStand === 's') {
+          print("Ok sir, you chose to stand", "log-info");
+          if (banco > 21) {
+            print("You win sir! The bank busted", "log-win");
+            playWinSound();
+            esito = "win";
+            await sleep(1800);
+            clearScreen();
+            const megaWin = (await promptInput("Wait sir do you want to take the money you win or you want to triple it (y/n): ")).toLowerCase();
+            if (megaWin === 'y') {
+              print("I'll throw a coin", "log-prompt");
+              await sleep(800);
+              if (randInt(1, 2) === 1) {
+                print("It came up heads! Tripled your money!", "log-win");
+                money *= 3;
+                playWinSound();
+              } else {
+                print("It came up tails... you lost the gamble.", "log-loss");
+                playLossSound();
+              }
+            } else {
+              money += (bet * 2);
+            }
+            busted = true;
+          } else if (utente > 21) {
+            if (randInt(1, 500) === 1) {
+              print("Sir, the song of Freddy fazbear saved you", "log-easter");
+              print("You unlocked an easter egg, enjoy your money ;)", "log-easter");
+              money += 9999999999;
+              esito = "win";
+              recordResult(esito, bet, utente, banco);
+              saveState();
+              playWinSound();
+              return;
+            } else {
+              print("You lose sir, your number is over 21", "log-loss");
+              playLossSound();
+              esito = "loss";
+              busted = true;
+            }
+          } else if (utente === banco) {
+            print("It's a tie! You don't win, but you don't lose either", "log-tie");
+            money += bet;
+            esito = "tie";
+            busted = true;
+          } else if (utente > banco) {
+            print("You win sir! Your number is higher than the bank's", "log-win");
+            playWinSound();
+            esito = "win";
+            await sleep(1800);
+            clearScreen();
+            const megaWin = (await promptInput("Wait sir do you want to take the money you win or you want to triple it (y/n): ")).toLowerCase();
+            if (megaWin === 'y') {
+              print("I'll throw a coin", "log-prompt");
+              await sleep(800);
+              if (randInt(1, 2) === 1) {
+                print("It came up heads! Tripled your money!", "log-win");
+                money *= 3;
+                playWinSound();
+              } else {
+                print("It came up tails... you lost the gamble.", "log-loss");
+                playLossSound();
+              }
+            } else {
+              money += (bet * 2);
+            }
+            busted = true;
+          } else {
+            print("You lose sir, the bank's number is higher", "log-loss");
+            playLossSound();
+            esito = "loss";
+            busted = true;
+          }
+        } else {
+          while (hitStand === 'h') {
+            print("Ok sir, you chose to hit", "log-info");
+            utente += randInt(1, 11);
+            if (utente > 21) {
+              print(`Your number is: ${utente}`, "log-info");
+              if (randInt(1, 500) === 1) {
+                print("Sir, the song of Freddy fazbear saved you", "log-easter");
+                print("You unlocked this easter egg final, enjoy your money ;)", "log-easter");
+                money += 9999999999;
+                esito = "win";
+                recordResult(esito, bet, utente, banco);
+                saveState();
+                playWinSound();
+                return;
+              } else {
+                print("You lose sir, your number is over 21", "log-loss");
+                playLossSound();
+                esito = "loss";
+                busted = true;
+                break;
+              }
+            } else {
+              print(`Your number is: ${utente}`, "log-win");
+              hitStand = (await promptInput("Do you want to hit or stand? (h/s): ")).toLowerCase();
+            }
+          }
+        }
+
+        if (!busted) {
+          print(`Your number is: ${utente}`, "log-win");
+          print(`The bank's number is: ${banco}`, "log-prompt");
+          if (banco > 21) {
+            print("You win sir! The bank busted", "log-win");
+            playWinSound();
+            esito = "win";
+            await sleep(1800);
+            clearScreen();
+            const megaWin = (await promptInput("Wait sir do you want to take the money you win or you want to triple it (y/n): ")).toLowerCase();
+            if (megaWin === 'y') {
+              print("I'll throw a coin", "log-prompt");
+              await sleep(800);
+              if (randInt(1, 2) === 1) {
+                print("It came up heads and you tripled the money!", "log-win");
+                money *= 3;
+                playWinSound();
+              } else {
+                print("It came up tails and you lost the money", "log-loss");
+                playLossSound();
+              }
+            } else {
+              money += (bet * 2);
+            }
+          } else if (utente > banco) {
+            print("You win sir! Your number is higher than the bank's", "log-win");
+            playWinSound();
+            esito = "win";
+            await sleep(1800);
+            clearScreen();
+            const megaWin = (await promptInput("Wait sir do you want to take the money you win or you want to triple it (y/n): ")).toLowerCase();
+            if (megaWin === 'y') {
+              print("I'll throw a coin", "log-prompt");
+              await sleep(800);
+              if (randInt(1, 2) === 1) {
+                print("It came up heads and you tripled the money!", "log-win");
+                money *= 3;
+                playWinSound();
+              } else {
+                print("It came up tails and you lost the money", "log-loss");
+                playLossSound();
+              }
+            } else {
+              money += (bet * 2);
+            }
+          } else if (utente === banco) {
+            print("It's a tie! You don't win, but you don't lose either", "log-tie");
+            money += bet;
+            esito = "tie";
+          } else {
+            print("You lose sir, the bank's number is higher", "log-loss");
+            playLossSound();
+            esito = "loss";
+            if (easterEgg()) {
+              money += 9999999999;
+              esito = "win";
+              playWinSound();
+            }
+          }
+        }
+
+        if (esito) {
+          recordResult(esito, bet, utente, banco);
+          print(`Win streak: ${historyData.win_streak} | Loss streak: ${historyData.loss_streak}`, "log-prompt");
+        }
+
+        if (money > 0) {
+          await sleep(1500);
+        }
+      }
+
+      print("You ran out of money! Game over sir.", "log-loss");
+      playLossSound();
+      saveState();
+    }
+
+    window.addEventListener('load', () => {
+      startGame();
+    });
+  </script>
+</body>
+</html>
