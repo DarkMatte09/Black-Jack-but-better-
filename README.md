@@ -3,18 +3,19 @@
 ```
   BLACKJACK — BUT BETTER
  ────────────────────────
- terminal-based • high stakes • pure vibe
+ Hack Club: Out to C Submission
+ terminal-based • high stakes • pure C++17
 ```
 
-[![Language](https://img.shields.io/badge/C%2B%2B-17-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)](https://isocpp.org)
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](python/)
+[![Language](https://img.shields.io/badge/Language-C%2B%2B17-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)](https://isocpp.org)
+[![Event](https://img.shields.io/badge/Hack%20Club-Out%20to%20C-ec3750?style=for-the-badge)](https://github.com/hackclub/out-to-c)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Play%20Online-4fd6be?style=for-the-badge&logo=google-chrome&logoColor=black)](https://darkmatte09.github.io/Black-Jack-but-better-/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-000000?style=for-the-badge)](https://github.com/DarkMatte09/Black-Jack-but-better-)
 [![License](https://img.shields.io/badge/License-MIT-black?style=for-the-badge)](LICENSE)
 
 <br/>
 
-> A ruthless terminal Blackjack experience with real betting stakes, persistence, win-streak tracking, and rare secrets.
+> A ruthless terminal Blackjack experience engineered in C++17 with real betting stakes, persistence, win-streak analytics, and rare secrets.
 
 [Play the Live Web Terminal](https://darkmatte09.github.io/Black-Jack-but-better-/)
 
@@ -22,68 +23,89 @@
 
 ---
 
-### Features
+### Hack Club: Out to C Project Details
 
-- C++17 Core Engine: Native high-performance terminal executable with modular architecture.
-- Web Terminal Edition: Playable directly in modern browsers via GitHub Pages.
-- Coin Flip Gamble: 50/50 probability test at startup.
-- Persistent Bankroll: Balance is saved automatically across sessions ($1,000 starting bank).
-- Streak Analytics: Tracks win/loss streaks and personal bests in JSON format.
-- Classic & Dynamic Rules: Dealer AI draw logic (hits until 17), split-second hit/stand decisions.
-- Rare Easter Eggs: 1% clutch save and secret endings.
+This project is built for Hack Club's **Out to C** event.
+
+- Primary Language: C++ (C++17 Standard)
+- Core Paradigms: Object-Oriented Programming (OOP), RAII, STL container algorithms, cross-platform terminal management.
+- Why C++ was chosen: C++ allows direct systems control and high performance while providing modern abstractions through classes, templates, and strict type safety. It enables clean encapsulation of game states, custom serialization for game persistence without bulky external dependencies, and low-latency terminal execution.
 
 ---
 
-### Quickstart
+### Beyond The Tutorial: Genuine Effort & Custom Systems
 
-#### 1. Compile and Run (C++)
+Unlike standard tutorial blackjack scripts, this project features:
 
-**Using g++:**
+1. Object-Oriented State Encapsulation:
+   - BankrollManager (`money.h`): Handles bankroll management, bet validation, and JSON disk serialization using RAII file streams.
+   - HistoryTracker (`history.h`): Tracks individual game entries, consecutive win/loss streaks, and all-time records in structured JSON format.
+
+2. Custom Visuals & Cross-Platform Display:
+   - UTF-8 console output switching for Windows consoles (`CP_UTF8`) and POSIX terminal support for high-resolution ASCII banner art.
+   - Screen clearing and sleep helpers without platform-specific hardcoding.
+
+3. High-Stakes Risk/Reward Game Mechanics:
+   - Initial 50/50 coin-toss gamble at boot.
+   - Automated dealer draw AI respecting the soft 17 threshold rule.
+   - Double-or-triple coin-toss multiplier on winning hands.
+   - Low-probability (1%) clutch save easter eggs.
+
+4. Multi-Platform Build Systems:
+   - Standard GNU Make configuration (`Makefile`).
+   - Cross-platform CMake configuration (`CMakeLists.txt`).
+   - Direct compiler command support for `g++` and `clang++`.
+
+5. Web Terminal Edition:
+   - Embedded browser terminal published on GitHub Pages for zero-setup evaluator testing.
+
+---
+
+### Quickstart & Compilation
+
+#### Option A: Direct g++ / Clang++ (Recommended)
+
 ```bash
 g++ -std=c++17 -O2 main.cpp -o blackjack
 ./blackjack
 ```
 
-**Using Make:**
+#### Option B: GNU Make
+
 ```bash
 make
 ./blackjack
 ```
 
-**Using CMake:**
+#### Option C: CMake
+
 ```bash
 cmake -B build
 cmake --build build
 ./build/blackjack
 ```
 
-#### 2. Run Python Version
+#### Option D: Play Online (Browser)
 
-```bash
-cd python
-python main.py
-```
-
-#### 3. Play Online (Browser)
-
-Visit [darkmatte09.github.io/Black-Jack-but-better-](https://darkmatte09.github.io/Black-Jack-but-better-/) to play instantly.
+No compilation needed:
+[https://darkmatte09.github.io/Black-Jack-but-better-/](https://darkmatte09.github.io/Black-Jack-but-better-/)
 
 ---
 
-### Project Structure
+### Project Architecture
 
 ```
 .
-├── main.cpp          # Core C++ game loop and terminal flow
-├── ascii.h           # ASCII header banners
-├── def_library.h     # Terminal management and easter egg utilities
-├── history.h         # Game history and streak persistence
-├── money.h           # Bankroll loader and saver
-├── Makefile          # GNU Make build script
+├── main.cpp          # Game loop, input handling, and decision flow
+├── ascii.h           # Raw string literal ASCII banners
+├── def_library.h     # Cross-platform terminal control and easter eggs
+├── history.h         # HistoryTracker class and streak analytics
+├── money.h           # BankrollManager class and balance persistence
+├── Makefile          # GNU Make build targets
 ├── CMakeLists.txt    # CMake configuration
 ├── index.html        # Web terminal edition for GitHub Pages
-├── README.md         # Documentation
-└── python/           # Original Python implementation
+├── README.md         # Out to C submission documentation
+└── python/           # Original Python prototype
     ├── main.py
     ├── ascii.py
     ├── def_library.py
@@ -95,6 +117,6 @@ Visit [darkmatte09.github.io/Black-Jack-but-better-](https://darkmatte09.github.
 
 <div align="center">
 
-Built by [DarkMatte09](https://github.com/DarkMatte09)
+Built for Hack Club Out to C by [DarkMatte09](https://github.com/DarkMatte09)
 
 </div>
