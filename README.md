@@ -33,6 +33,7 @@ This project is built for Hack Club's **Out to C** event.
 - Dependencies: None. Pure C++ Standard Template Library (STL). Zero external packages required.
 - Video Demonstration: [BlackJack.mp4](BlackJack.mp4) attached in repository.
 - Time Tracking: 68h 43m total (including 22h 55m dedicated in C++17) documented in [DEVLOG.md](DEVLOG.md).
+- AI Usage Disclosure: AI was used as a pair programming assistant to help design the C++17 OOP structure, configure build scripts (Make/CMake), and assist with terminal UTF-8 compatibility and debugging. Core game architecture, mechanics, and 68+ hours of development were guided and implemented by DarkMatte09.
 - Core Paradigms: Object-Oriented Programming (OOP), RAII, STL container algorithms, cross-platform terminal management.
 - Why C++ was chosen: C++ allows direct systems control and high performance while providing modern abstractions through classes, templates, and strict type safety. It enables clean encapsulation of game states, custom serialization for game persistence without bulky external dependencies, and low-latency terminal execution.
 
