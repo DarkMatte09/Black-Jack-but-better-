@@ -67,6 +67,11 @@ public:
         } catch (...) {
             current_balance = STARTING_MONEY;
         }
+
+        if (current_balance <= 0) {
+            current_balance = STARTING_MONEY;
+        }
+
         return current_balance;
     }
 
