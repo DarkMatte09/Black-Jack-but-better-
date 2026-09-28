@@ -9,6 +9,7 @@
 
 [![Language](https://img.shields.io/badge/Language-C%2B%2B17-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)](https://isocpp.org)
 [![Event](https://img.shields.io/badge/Hack%20Club-Out%20to%20C-ec3750?style=for-the-badge)](https://github.com/hackclub/out-to-c)
+[![Dev Log](https://img.shields.io/badge/Dev%20Log-68%20Hours-blue?style=for-the-badge)](DEVLOG.md)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Play%20Online-4fd6be?style=for-the-badge&logo=google-chrome&logoColor=black)](https://darkmatte09.github.io/Black-Jack-but-better-/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-000000?style=for-the-badge)](https://github.com/DarkMatte09/Black-Jack-but-better-)
 [![License](https://img.shields.io/badge/License-MIT-black?style=for-the-badge)](LICENSE)
@@ -17,7 +18,7 @@
 
 > A ruthless terminal Blackjack experience engineered in C++17 with real betting stakes, persistence, win-streak analytics, and rare secrets.
 
-[Play the Live Web Terminal](https://darkmatte09.github.io/Black-Jack-but-better-/)
+[Play the Live Web Terminal](https://darkmatte09.github.io/Black-Jack-but-better-/) • [View 68h Dev Log](DEVLOG.md)
 
 </div>
 
@@ -28,6 +29,8 @@
 This project is built for Hack Club's **Out to C** event.
 
 - Primary Language: C++ (C++17 Standard)
+- Dependencies: None. Pure C++ Standard Template Library (STL). Zero external packages required.
+- Time Tracking: 68 hours total documented in [DEVLOG.md](DEVLOG.md).
 - Core Paradigms: Object-Oriented Programming (OOP), RAII, STL container algorithms, cross-platform terminal management.
 - Why C++ was chosen: C++ allows direct systems control and high performance while providing modern abstractions through classes, templates, and strict type safety. It enables clean encapsulation of game states, custom serialization for game persistence without bulky external dependencies, and low-latency terminal execution.
 
@@ -57,7 +60,39 @@ Unlike standard tutorial blackjack scripts, this project features:
    - Direct compiler command support for `g++` and `clang++`.
 
 5. Web Terminal Edition:
-   - Embedded browser terminal published on GitHub Pages for zero-setup evaluator testing.
+   - Embedded browser terminal published on GitHub Pages for zero-setup evaluator testing: [https://darkmatte09.github.io/Black-Jack-but-better-/](https://darkmatte09.github.io/Black-Jack-but-better-/)
+
+---
+
+### Gameplay Preview
+
+```text
+Are you feeling lucky (y/n): y
+I'll trow a coin you have 50%
+suspence
+What a lucky man
+
+want to play? (y/n): y
+Sure? You can't comeback after this decision
+Are you sure? (y/n): y
+Good luck sir, you will need it
+
+How much do you want to bet? currently having: 1000$ 250
+Ok sir, you bet: 250$
+Confirm? (y/n): y
+
+Your number is:  19
+Do you want to hit or stand? (h/s): s
+Ok sir, you chose to stand
+Your number is:  19
+The bank's number is:  18
+You win sir! your number is higher than the bank's
+
+Wait sir do you want to take the money you win or you want to triple it (y/n): y
+I'll trow a coin
+It came up heads and you tripled th money!
+Win streak: 1 | Loss streak: 0
+```
 
 ---
 
@@ -103,6 +138,8 @@ No compilation needed:
 ├── money.h           # BankrollManager class and balance persistence
 ├── Makefile          # GNU Make build targets
 ├── CMakeLists.txt    # CMake configuration
+├── DEVLOG.md         # 68-hour development time log
+├── LICENSE           # MIT Open Source License
 ├── index.html        # Web terminal edition for GitHub Pages
 ├── README.md         # Out to C submission documentation
 └── python/           # Original Python prototype
@@ -117,6 +154,6 @@ No compilation needed:
 
 <div align="center">
 
-Built for Hack Club Out to C by [DarkMatte09](https://github.com/DarkMatte09)
+Built for Hack Club Out to C by [DarkMatte09](https://github.com/DarkMatte09) • Licensed under [MIT](LICENSE)
 
 </div>
