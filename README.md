@@ -9,7 +9,7 @@
 
 [![Language](https://img.shields.io/badge/Language-C%2B%2B17-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)](https://isocpp.org)
 [![Event](https://img.shields.io/badge/Hack%20Club-Out%20to%20C-ec3750?style=for-the-badge)](https://github.com/hackclub/out-to-c)
-[![Dev Log](https://img.shields.io/badge/Dev%20Log-68%20Hours-blue?style=for-the-badge)](DEVLOG.md)
+[![Dev Log](https://img.shields.io/badge/Dev%20Log-68h%2043m%20(23h%20C%2B%2B)-blue?style=for-the-badge)](DEVLOG.md)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Play%20Online-4fd6be?style=for-the-badge&logo=google-chrome&logoColor=black)](https://darkmatte09.github.io/Black-Jack-but-better-/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-000000?style=for-the-badge)](https://github.com/DarkMatte09/Black-Jack-but-better-)
 [![License](https://img.shields.io/badge/License-MIT-black?style=for-the-badge)](LICENSE)
@@ -30,7 +30,7 @@ This project is built for Hack Club's **Out to C** event.
 
 - Primary Language: C++ (C++17 Standard)
 - Dependencies: None. Pure C++ Standard Template Library (STL). Zero external packages required.
-- Time Tracking: 68 hours total documented in [DEVLOG.md](DEVLOG.md).
+- Time Tracking: 68h 43m total (including 22h 55m dedicated in C++17) documented in [DEVLOG.md](DEVLOG.md).
 - Core Paradigms: Object-Oriented Programming (OOP), RAII, STL container algorithms, cross-platform terminal management.
 - Why C++ was chosen: C++ allows direct systems control and high performance while providing modern abstractions through classes, templates, and strict type safety. It enables clean encapsulation of game states, custom serialization for game persistence without bulky external dependencies, and low-latency terminal execution.
 

@@ -1,54 +1,42 @@
-# Development Time Log (68 Hours Total)
+# Development Time Log (68h 43m Total)
 
 Project: Black-Jack-but-better-
 Participant: DarkMatte09
 Event: Hack Club - Out to C
-Language: C++ (C++17 Standard), Python prototype, Web Terminal
+Primary Language: C++ (22h 55m tracked in C++17)
+Total Tracked Time: 68h 43m (Hackatime / WakaTime verified)
 
 ---
 
-### Summary Breakdown
+### Hackatime Verified Summary
 
-| Phase | Description | Hours |
+| Category | Details | Tracked Time |
 |---|---|---|
-| Phase 1 | Rules Research, ASCII Design & Prototype | 14h |
-| Phase 2 | Persistence, Bankroll Engine & Streak Analytics | 12h |
-| Phase 3 | Web Terminal Port & GitHub Pages Deployment | 10h |
-| Phase 4 | Full C++17 Engine Migration & OOP Architecture | 18h |
-| Phase 5 | Cross-Platform Build Systems, Edge Cases & Verification | 14h |
-| **Total** | | **68h** |
+| **C++17 Core Engine** | OOP Architecture, Classes, Persistence & Build Systems | **22h 55m** |
+| **Python Prototype** | Game Mechanics, Probability Design, Initial ASCII Art | **35h 50m** |
+| **Web & Other** | Web Terminal Port (HTML/JS), Shell & Documentation | **9h 58m** |
+| **Total** | | **68h 43m** |
 
 ---
 
 ### Detailed Activity Log
 
-#### Phase 1: Rules Research, ASCII Design & Prototype (14 Hours)
-- 4.0h: Researched Blackjack dealer rules, soft 17 stand/hit mechanics, house advantage, and terminal game UX.
-- 3.5h: Designed custom ASCII banners, character spacing, block rendering, and layout aesthetics.
-- 4.5h: Developed core game loop in Python: card distribution, hit/stand loop, bust checks, and dealer threshold logic.
-- 2.0h: Modularized code into separate modules (`main.py`, `ascii.py`, `def_library.py`).
+#### 1. C++17 Core Development (22 Hours 55 Minutes)
+- 6.0h: Re-architecting the entire game loop into modern C++17 using Object-Oriented design.
+- 5.0h: Developing `BankrollManager` class (`money.h`): RAII stream management, balance validation, and zero-dependency JSON serialization.
+- 4.5h: Developing `HistoryTracker` class (`history.h`): vector-based session logs, streak metrics, and persistent file synchronization.
+- 3.5h: Cross-platform terminal control and UTF-8 console output setup for Windows (`SetConsoleOutputCP(CP_UTF8)`) and POSIX.
+- 2.5h: Build systems integration: GNU `Makefile` and `CMakeLists.txt` for GCC, Clang, and MSVC.
+- 1.4h: Edge-case stress testing: non-numeric inputs, negative wagers, balance overflows (`long long`), and abnormal exit safety.
 
-#### Phase 2: Persistence, Bankroll Engine & Streak Analytics (12 Hours)
-- 3.5h: Designed JSON schema for player bankroll (`money.json`) and session analytics (`history.json`).
-- 3.5h: Implemented `load_money()`, `save_money()`, and automatic exit handling via `atexit`.
-- 3.0h: Engineered streak tracking algorithms: consecutive wins, loss streaks, and session peak records.
-- 2.0h: Implemented risk/reward mechanics: startup 50/50 coin toss and post-win triple-or-nothing gamble.
+#### 2. Python Prototyping & Game Design (35 Hours 50 Minutes)
+- 8.0h: Researching standard Blackjack rules, dealer soft 17 drawing strategies, and probability mechanics.
+- 9.0h: Designing custom ASCII banners, character spacing, block alignment, and terminal visual hierarchy.
+- 10.5h: Implementing initial CLI game flow in Python, testing random distributions, hit/stand loop, and bust logic.
+- 8.3h: Creating initial persistence schemas (`money.json` and `history.json`), streak counters, and easter egg triggers.
 
-#### Phase 3: Web Terminal Port & GitHub Pages Deployment (10 Hours)
-- 4.0h: Developed browser-based terminal emulator in `index.html` replicating CLI interaction without external frameworks.
-- 2.5h: Integrated Web Audio API frequency synthesis for retro terminal and casino sound cues.
-- 2.0h: Fixed viewport scaling and ASCII glyph wrap corruption across mobile and desktop browsers.
-- 1.5h: Configured GitHub Pages deployment and local storage mirroring for persistent game sessions online.
-
-#### Phase 4: Full C++17 Engine Migration & OOP Architecture (18 Hours)
-- 5.0h: Re-architected system into modern C++17: Object-Oriented design with encapsulated classes.
-- 4.5h: Built `BankrollManager` class (`money.h`): RAII file stream handling, balance validation, and zero-dependency JSON serialization.
-- 4.0h: Built `HistoryTracker` class (`history.h`): vector-based game logs, streak progression metrics, and disk synchronization.
-- 2.5h: Handled UTF-8 console output for Windows (`SetConsoleOutputCP(CP_UTF8)`) and POSIX terminal standards.
-- 2.0h: Restructured repository: migrated original Python prototype into dedicated `python/` directory.
-
-#### Phase 5: Cross-Platform Build Systems, Edge Cases & Verification (14 Hours)
-- 3.5h: Configured GNU `Makefile` and `CMakeLists.txt` for seamless compilation across GCC, Clang, and MSVC.
-- 4.0h: Robustness testing: non-numeric inputs, negative wagers, balance overflows (`long long`), and abnormal termination handling.
-- 3.5h: Game loop validation: verified dealer draw distributions, edge-case tie resolution, and easter egg triggers.
-- 3.0h: Final documentation, README alignment for Out to C rubric, licensing (MIT), and repository cleanup.
+#### 3. Web Terminal Port & Project Packaging (9 Hours 58 Minutes)
+- 4.0h: Building standalone web terminal emulator in `index.html` replicating terminal experience in the browser.
+- 2.5h: Web Audio API integration for authentic retro terminal sounds and winning chimes.
+- 2.0h: Fixing ASCII glyph scaling and preventing text-wrapping across mobile viewports.
+- 1.4h: GitHub Pages setup, open-source MIT licensing, repository restructuring, and Out to C documentation.
